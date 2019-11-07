@@ -1,0 +1,23 @@
+
+<!DOCTYPE html>
+<!-- Template by quackit.com -->
+<title>Header</title>
+
+<body>
+
+<div id="main">
+
+
+  {% for job in jobs %}
+  <h4><a href="{{ job.href }}">{{ job.title }}</a></h4>
+      <p>{{ job.descript }}</p><br/>
+      <p>{{ job.company }}</p>
+      <hr><br/>
+  {% endfor %}
+
+</div>
+
+
+</body>
+
+<footer>Footer</footer>
