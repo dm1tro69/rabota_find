@@ -16,12 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from scraping.views import home, index, lists
+from scraping.views import home, index, lists, vacancy_list
 from .views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('home/', home),
     path('index/', index),
-    path('list/', lists),
+    path('list/', vacancy_list),
 ]

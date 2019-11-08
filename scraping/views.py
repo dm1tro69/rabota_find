@@ -1,8 +1,12 @@
 
 
 # Create your views here.
+from django.core.paginator import PageNotAnInteger, Paginator, EmptyPage
 from django.db import IntegrityError
+from django.http import Http404
 from django.shortcuts import render
+
+from scraping.forms import FindVacancyForm
 from scraping.utils import *
 from scraping.models import *
 import datetime
@@ -13,17 +17,37 @@ def index(request):
 def lists(request):
     today = datetime.date.today()
     city = City.objects.get(name='Львов')
-    speciality = Specialty.objects.get(name='Python')
-    qs = Vacancy.objects.filter(city=city.id, speciality=speciality.id, timestamp=today)
+    specialty = Specialty.objects.get(name='Python')
+    qs = Vacancy.objects.filter(city=city.id, specialty=specialty.id, timestamp=today)
     if qs:
         return render(request, 'scraping/list.html', {'jobs': qs})
     return render(request, 'scraping/list.html')
 
 
+def vacancy_list(request):
+    today = datetime.date.today()
+    form = FindVacancyForm
+    if request.GET:
+        try:
+            city_id = int(request.GET.get('city'))
+            specialty_id = int(request.GET.get('specialty'))
+        except ValueError:
+            raise Http404('Страница не найдена')
+        context = {}
+        context['form'] = form
+        qs = Vacancy.objects.filter(city=city_id, specialty=specialty_id, timestamp=today)
+        if qs:
+            context['jobs'] = qs
+            return render(request, 'scraping/list.html', context)
+
+    return render(request, 'scraping/list.html', {'form': form})
+
+
+
 def home(request):
     city = City.objects.get(name='Киев')
-    speciality = Specialty.objects.get(name='Python')
-    url_qs = Url.objects.filter(city=city, speciality=speciality)
+    specialty = Specialty.objects.get(name='Python')
+    url_qs = Url.objects.filter(city=city, specialty=specialty)
     site = Site.objects.all()
     url_w = url_qs.get(site=site.get(name='Work.ua')).url_address
     url_dj = url_qs.get(site=site.get(name='Djinni.co')).url_address
@@ -39,7 +63,7 @@ def home(request):
     # url_list = [i['url'] for i in v]
     for job in jobs:
         #if job['href'] not in url_list:
-        vacancy = Vacancy(city=city, speciality=speciality, url=job['href'],title=job['title'], description=job['descript'], company=job['company'])
+        vacancy = Vacancy(city=city, specialty=specialty, url=job['href'],title=job['title'], description=job['descript'], company=job['company'])
         try:
            vacancy.save()
         except IntegrityError:

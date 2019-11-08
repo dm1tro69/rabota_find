@@ -4,7 +4,7 @@ from .models import *
 class VacancyAdmin(admin.ModelAdmin):
     class Meta:
         model = Vacancy
-    list_display = ('title', 'url', 'city', 'speciality', 'timestamp')
+    list_display = ('title', 'url', 'city', 'specialty', 'timestamp')
 
 # Register your models here.
 admin.site.register(City)
