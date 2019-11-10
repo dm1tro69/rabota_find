@@ -17,11 +17,13 @@ from django.contrib import admin
 from django.urls import path
 
 from scraping.views import home, index, lists, vacancy_list
+from subscribers.views import SubscriberCreate
 from .views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('home/', home),
-    path('index/', index),
-    path('list/', vacancy_list),
+    path('home/', home, name='home'),
+    path('index/', index, name='index'),
+    path('list/', vacancy_list, name='list'),
+    path('create/', SubscriberCreate.as_view(), name='create'),
 ]
