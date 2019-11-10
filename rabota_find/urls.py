@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path
 
 from scraping.views import home, index, lists, vacancy_list
-from subscribers.views import SubscriberCreate
+from subscribers.views import SubscriberCreate, update_subscriber, login_subscriber
 from .views import *
 
 urlpatterns = [
@@ -26,4 +26,6 @@ urlpatterns = [
     path('index/', index, name='index'),
     path('list/', vacancy_list, name='list'),
     path('create/', SubscriberCreate.as_view(), name='create'),
+    path('login/', login_subscriber, name='login'),
+    path('update/', update_subscriber, name='update'),
 ]

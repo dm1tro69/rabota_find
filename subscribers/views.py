@@ -44,7 +44,7 @@ def update_subscriber(request):
         qs = Subscriber.objects.filter(email=email).first()
         form = SubscriberHiddenEmailForm(initial={'email': qs.email,
                                                   'city': qs.city, 'specialty': qs.specialty,
-                                                  'password': qs.password, 'is_active': qs.is_activ})
+                                                  'password': qs.password, 'is_active': qs.is_active})
         return render(request, 'subscribers/update.html', {'form': form})
     if request.method == 'POST':
         email = request.session.get('email')
@@ -53,6 +53,7 @@ def update_subscriber(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Данные успешно сохранены')
+            del request.session['email']
 
             return redirect('list')
         messages.error(request, 'Проверте правильность заполнения')
@@ -60,6 +61,7 @@ def update_subscriber(request):
     else:
         form = SubscriberHiddenEmailForm()
         return redirect('login')
+
 
 
 
